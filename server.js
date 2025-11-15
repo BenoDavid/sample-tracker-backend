@@ -24,14 +24,14 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cors({
   origin: '*',
-  methods: ['GET', 'POST', 'PUT', 'DELETE','PATCH'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
   allowedHeaders: ['Content-Type', 'Authorization'],
 }));
 
 
 
 // ------------------ Routes ------------------
-app.use('/api/ft',routes); // Main API routes with watchMan middleware
+app.use('/api/st', routes); // Main API routes with watchMan middleware
 
 
 // ------------------ Error Handling ------------------

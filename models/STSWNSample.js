@@ -9,14 +9,9 @@ module.exports = (sequelize, DataTypes) => {
     }
 
     STSWNSample.init({
-        id: {
-            type: DataTypes.INTEGER,
-            primaryKey: true,
-            autoIncrement: true
-        },
         swnNo: {
+            primaryKey: true,
             type: DataTypes.STRING,
-            allowNull: false
         },
         buyer: { type: DataTypes.STRING },
         season: { type: DataTypes.STRING },
@@ -33,8 +28,8 @@ module.exports = (sequelize, DataTypes) => {
     }, {
         sequelize,
         modelName: 'STSWNSample',
-        tableName: 'STSWNSamples',
-        timestamps: false
+        tableName: 'cfaiRFTinspectiontempmaster_24_6_2025',
+        timestamps: false,
     });
 
     return STSWNSample;
