@@ -1,0 +1,50 @@
+'use strict';
+const { Model } = require('sequelize');
+
+module.exports = (sequelize, DataTypes) => {
+    class STSWNCollectionQty extends Model {
+        static associate(models) {
+            STSWNCollectionQty.belongsTo(models.STSWNCollectionDetail, {
+                foreignKey: 'detailId',
+                as: 'detail'
+            });
+        }
+    }
+
+    STSWNCollectionQty.init({
+        id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+        detailId: { type: DataTypes.INTEGER, allowNull: false },
+
+        // Line and operator info
+        line: { type: DataTypes.STRING },
+        operator: { type: DataTypes.STRING },
+        operatorAssignedBy: { type: DataTypes.STRING },
+        lineInTime: { type: DataTypes.DATE },
+        lineOutTime: { type: DataTypes.DATE },
+        lostMinutes: { type: DataTypes.INTEGER },
+        lostMinRemark: { type: DataTypes.TEXT },
+
+        // Stitch process
+        stitchOut: { type: DataTypes.INTEGER },
+        stitchOutBy: { type: DataTypes.STRING },
+
+        // QC process
+        qcStatus: { type: DataTypes.STRING }, // e.g., 'Pending', 'Pass', 'Fail'
+        qcBy: { type: DataTypes.STRING },
+        qcNote: { type: DataTypes.TEXT },
+
+        // CFT process
+        cftOutTime: { type: DataTypes.DATE },
+        cftStatus: { type: DataTypes.STRING },
+        cftOutBy: { type: DataTypes.STRING },
+        cftNote: { type: DataTypes.TEXT }
+
+    }, {
+        sequelize,
+        modelName: 'STSWNCollectionQty',
+        tableName: 'STSWNCollectionQtys',
+        timestamps: false
+    });
+
+    return STSWNCollectionQty;
+};
