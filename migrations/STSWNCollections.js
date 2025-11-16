@@ -26,6 +26,21 @@ module.exports = {
             supplier: {
                 type: Sequelize.STRING
             },
+            sampleType: {
+                type: Sequelize.STRING
+            },
+            color: {
+                type: Sequelize.STRING
+            },
+            sizeList: {
+                type: Sequelize.STRING
+            },
+            indentRemarks: {
+                type: Sequelize.TEXT
+            },
+            myRequiredDate: {
+                type: Sequelize.DATE
+            },
             createdBy: {
                 type: Sequelize.STRING
             },

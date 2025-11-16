@@ -10,11 +10,11 @@ module.exports = {
                 primaryKey: true,
                 type: Sequelize.INTEGER
             },
-            detailId: {
+            collectionId: {
                 type: Sequelize.INTEGER,
                 allowNull: false,
                 references: {
-                    model: 'STSWNCollectionDetails',
+                    model: 'STSWNCollections',
                     key: 'id'
                 },
                 onUpdate: 'CASCADE',

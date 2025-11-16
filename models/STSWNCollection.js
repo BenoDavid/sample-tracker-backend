@@ -4,10 +4,7 @@ const { Model } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class STSWNCollection extends Model {
     static associate(models) {
-      STSWNCollection.hasMany(models.STSWNCollectionDetail, {
-        foreignKey: 'sampleId',
-        as: 'details'
-      });
+
     }
   }
 
@@ -18,7 +15,11 @@ module.exports = (sequelize, DataTypes) => {
     season: { type: DataTypes.STRING },
     buyer: { type: DataTypes.STRING },
     supplier: { type: DataTypes.STRING },
-    createdBy: { type: DataTypes.STRING },
+    sampleType: { type: DataTypes.STRING },
+    color: { type: DataTypes.STRING },
+    sizeList: { type: DataTypes.STRING },
+    indentRemarks: { type: DataTypes.TEXT },
+    myRequiredDate: { type: DataTypes.DATE },
     createdAt: { type: DataTypes.DATE, defaultValue: DataTypes.NOW }
   }, {
     sequelize,

@@ -4,16 +4,13 @@ const { Model } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
     class STSWNCollectionStage extends Model {
         static associate(models) {
-            STSWNCollectionStage.belongsTo(models.STSWNCollectionDetail, {
-                foreignKey: 'detailId',
-                as: 'detail'
-            });
+
         }
     }
 
     STSWNCollectionStage.init({
         id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-        detailId: { type: DataTypes.INTEGER, allowNull: false },
+        collectionId: { type: DataTypes.INTEGER, allowNull: false },
         stageType: { type: DataTypes.STRING }, // 'Fabric', 'Cutting', 'Trim', 'Printing', 'Embroidery', 'Laser'
         inAt: { type: DataTypes.DATE },
         outAt: { type: DataTypes.DATE },

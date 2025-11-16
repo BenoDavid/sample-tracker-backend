@@ -4,10 +4,7 @@ const { Model } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
     class STSWNCollectionDefect extends Model {
         static associate(models) {
-            STSWNCollectionDefect.belongsTo(models.STSWNCollectionQty, {
-                foreignKey: 'qtyId',
-                as: 'qty'
-            });
+
         }
     }
 

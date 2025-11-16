@@ -4,16 +4,13 @@ const { Model } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
     class STSWNCollectionQty extends Model {
         static associate(models) {
-            STSWNCollectionQty.belongsTo(models.STSWNCollectionDetail, {
-                foreignKey: 'detailId',
-                as: 'detail'
-            });
+
         }
     }
 
     STSWNCollectionQty.init({
         id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-        detailId: { type: DataTypes.INTEGER, allowNull: false },
+        collectionId: { type: DataTypes.INTEGER, allowNull: false },
 
         // Line and operator info
         line: { type: DataTypes.STRING },
