@@ -14,35 +14,43 @@ module.exports = {
                 type: Sequelize.STRING,
                 allowNull: false
             },
-            style: {
+            buyer: {
                 type: Sequelize.STRING
             },
             season: {
                 type: Sequelize.STRING
             },
-            buyer: {
-                type: Sequelize.STRING
-            },
-            supplier: {
-                type: Sequelize.STRING
-            },
             sampleType: {
                 type: Sequelize.STRING
             },
+            style: {
+                type: Sequelize.STRING
+            },
+            
+            supplier: {
+                type: Sequelize.STRING
+            },
+            
             color: {
                 type: Sequelize.STRING
             },
-            sizeList: {
+            size: {
                 type: Sequelize.STRING
+            },
+            buyerQty: {
+                type: Sequelize.INTEGER
+            },
+            counterQty: {
+                type: Sequelize.INTEGER
+            },
+            swnQty: {
+                type: Sequelize.INTEGER
             },
             indentRemarks: {
                 type: Sequelize.TEXT
             },
             myRequiredDate: {
                 type: Sequelize.DATE
-            },
-            createdBy: {
-                type: Sequelize.STRING
             },
             createdAt: {
                 allowNull: false,

@@ -19,7 +19,7 @@ module.exports = (sequelize, DataTypes) => {
         style: { type: DataTypes.STRING },
         supplier: { type: DataTypes.STRING },
         color: { type: DataTypes.STRING },
-        sizeList: { type: DataTypes.STRING },
+        size: { type: DataTypes.STRING, field: "sizeList"  },
         buyerQty: { type: DataTypes.DECIMAL(10, 2), defaultValue: 0.00 },
         counterQty: { type: DataTypes.DECIMAL(10, 2), defaultValue: 0.00 },
         swnQty: { type: DataTypes.DECIMAL(10, 2), defaultValue: 0.00 },
