@@ -13,12 +13,6 @@ module.exports = {
             collectionId: {
                 type: Sequelize.INTEGER,
                 allowNull: false,
-                references: {
-                    model: 'STSWNCollections',
-                    key: 'id'
-                },
-                onUpdate: 'CASCADE',
-                onDelete: 'CASCADE'
             },
             stageType: {
                 type: Sequelize.STRING, // e.g., 'Fabric', 'Cutting', 'Trim', 'Printing', 'Embroidery', 'Laser'
@@ -44,7 +38,7 @@ module.exports = {
                 type: Sequelize.STRING, // 'Partial', 'Full'
                 allowNull: true
             },
-            qtyOut: {
+            qty: {
                 type: Sequelize.DECIMAL(10, 2),
                 allowNull: false,
                 defaultValue: 0.00

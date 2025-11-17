@@ -17,7 +17,7 @@ module.exports = (sequelize, DataTypes) => {
         inBy: { type: DataTypes.STRING },
         outBy: { type: DataTypes.STRING },
         status: { type: DataTypes.STRING }, // 'Partial', 'Full'
-        qtyOut: { type: DataTypes.INTEGER },
+        qty: { type: DataTypes.INTEGER },
         note: { type: DataTypes.TEXT }
     }, {
         sequelize,
