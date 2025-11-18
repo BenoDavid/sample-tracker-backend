@@ -18,7 +18,8 @@ module.exports = (sequelize, DataTypes) => {
         outBy: { type: DataTypes.STRING },
         status: { type: DataTypes.STRING }, // 'Partial', 'Full'
         qty: { type: DataTypes.INTEGER },
-        note: { type: DataTypes.TEXT }
+        note: { type: DataTypes.TEXT },
+        attachment: { type: DataTypes.STRING },
     }, {
         sequelize,
         modelName: 'STSWNCollectionStage',

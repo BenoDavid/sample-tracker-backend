@@ -46,7 +46,9 @@ module.exports = {
             note: {
                 type: Sequelize.TEXT,
                 allowNull: true
-            }
+            },
+            attachment: { type: Sequelize.STRING },
+
         });
     },
 
