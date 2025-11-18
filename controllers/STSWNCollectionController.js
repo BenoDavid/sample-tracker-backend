@@ -63,59 +63,85 @@ class STSWNCollectionController extends BaseController {
 
   async getAll(req, res) {
     try {
-      // Extract query parameters for pagination, filtering, and sorting
-      const { fromDate, toDate, page = 1, limit = 10, sortBy = 'createdAt', sortOrder = 'DESC', stage = null, ...filters } = req.query;
+      const {
+        fromDate,
+        toDate,
+        page = 1,
+        limit = 10,
+        sortBy = 'createdAt',
+        sortOrder = 'DESC',
+        stage = null,
+        inOrOut = null,
+        ...filters
+      } = req.query;
 
-      // Set up pagination
       const offset = (page - 1) * limit;
-      const paginationOptions = { offset: parseInt(offset), limit: parseInt(limit) };
 
-      // Set up sorting
-      const sortOptions = [[sortBy, sortOrder.toUpperCase()]];
-
-      // Set up filtering
+      // Filtering
       const filterOptions = {};
       for (const key in filters) {
         filterOptions[key] = filters[key];
       }
+
       if (fromDate && toDate) {
         const startDate = new Date(fromDate);
         const endDate = new Date(toDate);
-
-        // Adjust endDate to include the entire day
         endDate.setHours(23, 59, 59, 999);
-
         filterOptions.createdAt = {
           [Sequelize.Op.between]: [startDate, endDate],
         };
       }
-      let inc = stage ? [
-        {
-          model: STSWNCollectionStage,
-          as: "stages",
-          where: { stageType: stage },
-          required: false
-        }
-      ] : [];
-      // Combine all options and fetch data
+
+      // Include stages only if stage filter exists
+      const inc = stage
+        ? [
+          {
+            model: STSWNCollectionStage,
+            as: "stages",
+            where:
+              inOrOut === "in"
+                ? { stageType: stage }
+                : { stageType: stage, outAt: null },
+            required: false,
+          },
+        ]
+        : [];
+
+      // Fetch raw data (no filtering based on length yet)
       const items = await this.model.findAndCountAll({
         where: filterOptions,
-        include: inc
-        // order: sortOptions,
-        // ...paginationOptions
+        include: inc,
+        order: [[sortBy, sortOrder.toUpperCase()]],
+        // offset: parseInt(offset),
+        // limit: parseInt(limit),
       });
 
-      // Respond with paginated data and metadata
+      // -----------------------------------------
+      // ⭐ APPLY LENGTH-BASED LOGIC HERE
+      // -----------------------------------------
+      let finalRows = items.rows;
+
+      if (inOrOut === "in") {
+        // Want collections that have *no stages*
+        finalRows = finalRows.filter(item => item.stages.length === 0);
+      }
+
+      if (inOrOut === "out") {
+        // Want collections that have *stages*
+        finalRows = finalRows.filter(item => item.stages.length > 0);
+      }
+
+      // Return filtered result
       res.status(200).json({
         status: 200,
         message: `${this.model.name}s fetched successfully`,
-        result: items.rows,
+        result: finalRows,
         pagination: {
-          totalItems: items.count,
-          totalPages: Math.ceil(items.count / limit),
+          totalItems: finalRows.length,
+          totalPages: Math.ceil(finalRows.length / limit),
           currentPage: parseInt(page),
-          pageSize: parseInt(limit)
-        }
+          pageSize: parseInt(limit),
+        },
       });
     } catch (error) {
       res.status(500).json({
@@ -125,6 +151,7 @@ class STSWNCollectionController extends BaseController {
       });
     }
   }
+
 }
 
 module.exports = new STSWNCollectionController();
