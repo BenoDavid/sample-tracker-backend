@@ -7,10 +7,64 @@ class STSWNCollectionController extends BaseController {
   constructor() {
     super(STSWNCollection);
   }
+  async updateBulkDataEach(req, res) {
+    const sequelize = STSWNCollection.sequelize; // ensure same instance
+    const t = await sequelize.transaction();
+
+    try {
+      const reqParams = req.body;
+
+      // -------------------------
+      // 1) CREATE STAGES
+      // -------------------------
+      if (Array.isArray(reqParams?.stages) && reqParams.stages.length > 0) {
+        await STSWNCollectionStage.bulkCreate(reqParams.stages, { transaction: t });
+      }
+
+      // -------------------------
+      // 2) UPDATE COLLECTIONS
+      // -------------------------
+      if (Array.isArray(reqParams?.collections) && reqParams.collections.length > 0) {
+        for (const item of reqParams.collections) {
+          const { id, ...data } = item;
+          if (!id) continue;
+
+          await STSWNCollection.update(
+            data,
+            {
+              where: { id },
+              transaction: t
+            }
+          );
+        }
+      }
+
+      // Commit transaction
+      await t.commit();
+
+      res.status(200).json({
+        status: 200,
+        message: `Bulk update successful`,
+        result: [],
+      });
+
+    } catch (error) {
+      // Rollback transaction
+      await t.rollback();
+
+      res.status(500).json({
+        status: 500,
+        message: error.message,
+        result: null,
+      });
+    }
+  }
+
+
   async getAll(req, res) {
     try {
       // Extract query parameters for pagination, filtering, and sorting
-      const { fromDate, toDate, page = 1, limit = 10, sortBy = 'createdAt', sortOrder = 'DESC', ...filters } = req.query;
+      const { fromDate, toDate, page = 1, limit = 10, sortBy = 'createdAt', sortOrder = 'DESC', stage = null, ...filters } = req.query;
 
       // Set up pagination
       const offset = (page - 1) * limit;
@@ -35,17 +89,18 @@ class STSWNCollectionController extends BaseController {
           [Sequelize.Op.between]: [startDate, endDate],
         };
       }
+      let inc = stage ? [
+        {
+          model: STSWNCollectionStage,
+          as: "stages",
+          where: { stageType: stage },
+          required: false
+        }
+      ] : [];
       // Combine all options and fetch data
       const items = await this.model.findAndCountAll({
         where: filterOptions,
-        include: [
-          {
-            model: STSWNCollectionStage,
-            as: "stages",
-            where: { stageType: "Trim" },
-            required: false
-          }
-        ]
+        include: inc
         // order: sortOptions,
         // ...paginationOptions
       });

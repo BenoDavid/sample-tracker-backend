@@ -21,6 +21,8 @@ class BaseRouter {
     this.router.put('/:id', this.controller.update.bind(this.controller));
     this.router.post('/updateBatch', this.controller.updateBatch.bind(this.controller));
     this.router.patch('/updateWithFilter', this.controller.updateWithFilter.bind(this.controller));
+    this.router.patch('/updateBulkDataEach', this.controller.updateBulkDataEach.bind(this.controller));
+
     this.router.delete('/:id', this.controller.delete.bind(this.controller));
   }
 

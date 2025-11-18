@@ -26,11 +26,11 @@ module.exports = {
             style: {
                 type: Sequelize.STRING
             },
-            
+
             supplier: {
                 type: Sequelize.STRING
             },
-            
+
             color: {
                 type: Sequelize.STRING
             },
@@ -52,6 +52,15 @@ module.exports = {
             myRequiredDate: {
                 type: Sequelize.DATE
             },
+            cutting: { type: Sequelize.INTEGER },
+            embroidery: { type: Sequelize.INTEGER },
+            fabric: { type: Sequelize.INTEGER },
+            laser: { type: Sequelize.INTEGER },
+            pattern: { type: Sequelize.INTEGER },
+            printing: { type: Sequelize.INTEGER },
+            stitching: { type: Sequelize.INTEGER },
+            trim: { type: Sequelize.INTEGER },
+            cutting: { type: Sequelize.INTEGER },
             createdAt: {
                 allowNull: false,
                 type: Sequelize.DATE,

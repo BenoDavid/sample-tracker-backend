@@ -22,6 +22,15 @@ module.exports = (sequelize, DataTypes) => {
     swnQty: { type: DataTypes.INTEGER },
     indentRemarks: { type: DataTypes.TEXT },
     myRequiredDate: { type: DataTypes.DATE },
+    cutting: { type: DataTypes.INTEGER },
+    embroidery: { type: DataTypes.INTEGER },
+    fabric: { type: DataTypes.INTEGER },
+    laser: { type: DataTypes.INTEGER },
+    pattern: { type: DataTypes.INTEGER },
+    printing: { type: DataTypes.INTEGER },
+    stitching: { type: DataTypes.INTEGER },
+    trim: { type: DataTypes.INTEGER },
+    cutting: { type: DataTypes.INTEGER },
     createdAt: { type: DataTypes.DATE, defaultValue: DataTypes.NOW }
   }, {
     sequelize,
