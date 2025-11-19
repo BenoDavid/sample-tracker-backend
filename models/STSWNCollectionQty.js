@@ -11,6 +11,7 @@ module.exports = (sequelize, DataTypes) => {
     STSWNCollectionQty.init({
         id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
         collectionId: { type: DataTypes.INTEGER, allowNull: false },
+        serialNo: { type: DataTypes.STRING, allowNull: false },
 
         // Line and operator info
         line: { type: DataTypes.STRING },
@@ -22,7 +23,7 @@ module.exports = (sequelize, DataTypes) => {
         lostMinRemark: { type: DataTypes.TEXT },
 
         // Stitch process
-        stitchOut: { type: DataTypes.INTEGER },
+        stitchOutTime: { type: DataTypes.INTEGER },
         stitchOutBy: { type: DataTypes.STRING },
 
         // QC process

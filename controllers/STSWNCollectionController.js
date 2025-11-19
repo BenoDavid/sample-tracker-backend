@@ -1,12 +1,88 @@
 // src/controllers/STSWNCollectionController.js
 const db = require('../models');
 const BaseController = require('./BaseController');
-const { STSWNCollectionStage, STSWNCollection } = db.sequelizeDb2.models; // adjust if using a different sequelize instance
+const { STSWNCollectionQty, STSWNCollectionStage, STSWNCollection } = db.sequelizeDb2.models; // adjust if using a different sequelize instance
 
 class STSWNCollectionController extends BaseController {
   constructor() {
     super(STSWNCollection);
   }
+
+  async createBatch(req, res) {
+    const t = await STSWNCollection.sequelize.transaction();
+
+    try {
+      const items = Array.isArray(req.body) ? req.body : [req.body];
+
+      let runningSerial = 1;
+      const createdParents = [];
+      const allSerialRecords = []; // For returning to client only
+
+      for (const item of items) {
+        // Create parent record inside transaction
+        const parent = await STSWNCollection.create(item, { transaction: t });
+        createdParents.push(parent);
+
+        const qty = item.swnQty || 0;
+        const serialList = [];
+
+        for (let i = 0; i < qty; i++) {
+          serialList.push({
+            collectionId: parent.id,
+            serialNo: (runningSerial + i) + '||' + item?.swnNo
+          });
+        }
+
+        // UI helper fields
+        parent.dataValues.serialList = serialList;
+        parent.dataValues.expanded = false;
+
+        // Collect for response
+        allSerialRecords.push(...serialList);
+
+        // Advance running serial
+        runningSerial += qty;
+
+        //
+        // 🚀 INSERT IN BATCHES OF 999
+        //
+        let start = 0;
+        const BATCH_SIZE = 999;
+
+        while (start < serialList.length) {
+          const chunk = serialList.slice(start, start + BATCH_SIZE);
+
+          await STSWNCollectionQty.bulkCreate(chunk, {
+            transaction: t
+          });
+
+          start += BATCH_SIZE;
+        }
+      }
+
+      // Commit all DB operations
+      await t.commit();
+
+      return res.status(200).json({
+        status: 200,
+        message: `STSWNCollection records created successfully`,
+        result: {
+          parents: createdParents,
+          serials: allSerialRecords
+        }
+      });
+
+    } catch (error) {
+      await t.rollback();
+      return res.status(500).json({
+        status: 500,
+        message: error.message,
+        result: []
+      });
+    }
+  }
+
+
   async updateBulkDataEach(req, res) {
     const sequelize = STSWNCollection.sequelize; // ensure same instance
     const t = await sequelize.transaction();

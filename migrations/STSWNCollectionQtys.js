@@ -13,13 +13,8 @@ module.exports = {
             collectionId: {
                 type: Sequelize.INTEGER,
                 allowNull: false,
-                references: {
-                    model: 'STSWNCollections',
-                    key: 'id'
-                },
-                onUpdate: 'CASCADE',
-                onDelete: 'CASCADE'
             },
+            serialNo: { type: Sequelize.STRING, allowNull: false },
 
             // Line and operator info
             line: { type: Sequelize.STRING, allowNull: true },
