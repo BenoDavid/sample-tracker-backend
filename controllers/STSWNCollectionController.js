@@ -169,19 +169,32 @@ class STSWNCollectionController extends BaseController {
       }
 
       // Include stages only if stage filter exists
-      const inc = stage
-        ? [
+      let inc;
+      if (stage == 'stitchingAllocator') {
+        inc = [
           {
-            model: STSWNCollectionStage,
-            as: "stages",
-            where:
-              inOrOut === "in"
-                ? { stageType: stage }
-                : { stageType: stage, outAt: null },
+            model: STSWNCollectionQty,
+            as: "pieces",
             required: false,
           },
-        ]
-        : [];
+        ];
+      } else {
+        inc = stage
+          ? [
+            {
+              model: STSWNCollectionStage,
+              as: "stages",
+              where:
+                inOrOut === "in"
+                  ? { stageType: stage }
+                  : { stageType: stage, outAt: null },
+              required: false,
+            },
+          ]
+          : [];
+      }
+
+
 
       // Fetch raw data (no filtering based on length yet)
       const items = await this.model.findAndCountAll({
