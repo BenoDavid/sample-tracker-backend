@@ -175,6 +175,9 @@ class STSWNCollectionController extends BaseController {
           {
             model: STSWNCollectionQty,
             as: "pieces",
+            where: {
+              operator: null
+            },
             required: false,
           },
         ];
@@ -212,14 +215,16 @@ class STSWNCollectionController extends BaseController {
 
       if (inOrOut === "in") {
         // Want collections that have *no stages*
-        finalRows = finalRows.filter(item => item.stages.length === 0);
+        finalRows = finalRows.filter(item => item?.stages?.length === 0);
       }
-
       if (inOrOut === "out") {
         // Want collections that have *stages*
-        finalRows = finalRows.filter(item => item.stages.length > 0);
+        finalRows = finalRows.filter(item => item?.stages?.length > 0);
       }
+      if (stage == 'stitchingAllocator') {
+        finalRows = finalRows.filter(item => item?.pieces?.length > 0);
 
+      }
       // Return filtered result
       res.status(200).json({
         status: 200,
