@@ -133,10 +133,11 @@ class STSWNCollectionQtyController extends BaseController {
           [Sequelize.Op.between]: [startDate, endDate],
         };
       }
+
+      
       // Combine all options and fetch data
       const items = await this.model.findAndCountAll({
         where: filterOptions,
-        attributes:['serialNo'],
         include: [
           {
             model: STSWNCollection,

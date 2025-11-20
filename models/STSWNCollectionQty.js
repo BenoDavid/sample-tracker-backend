@@ -39,10 +39,10 @@ module.exports = (sequelize, DataTypes) => {
         data: {
             type: DataTypes.TEXT,
             allowNull: false,
-            defaultValue: '{}',
+            defaultValue: '[]',
             get() {
                 const value = this.getDataValue('data');
-                return value ? JSON.parse(value) : {};
+                return value ? JSON.parse(value) : [];
             },
             set(value) {
                 this.setDataValue('data', JSON.stringify(value));
