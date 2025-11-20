@@ -4,7 +4,7 @@ const { Model } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
     class STSWNCollectionQty extends Model {
         static associate(models) {
-
+            STSWNCollectionQty.hasOne(models.STSWNCollection, { foreignKey: 'id', sourceKey: 'collectionId', as: 'collection' });
         }
     }
 

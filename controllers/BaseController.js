@@ -10,7 +10,8 @@ class BaseController {
   async getAll(req, res) {
     try {
       // Extract query parameters for pagination, filtering, and sorting
-      const { fromDate, toDate, page = 1, limit = 10, sortBy = 'createdAt', sortOrder = 'DESC', ...filters } = req.query;
+      const { fromDate, toDate, page = 1, limit = 10, search,
+        searchField, sortBy = 'createdAt', sortOrder = 'DESC', ...filters } = req.query;
 
       // Set up pagination
       const offset = (page - 1) * limit;
@@ -24,6 +25,27 @@ class BaseController {
       for (const key in filters) {
         filterOptions[key] = filters[key];
       }
+
+      // 🔍 Dynamic field search
+      if (search && searchField) {
+        filterOptions[searchField] = {
+          [Sequelize.Op.like]: `%${search}%`
+        };
+      }
+
+      // 🔍 Global search across all model fields
+      else if (search) {
+        const searchConditions = [];
+
+        for (const attribute of Object.keys(this.model.rawAttributes)) {
+          searchConditions.push({
+            [attribute]: { [Sequelize.Op.like]: `%${search}%` }
+          });
+        }
+
+        filterOptions[Sequelize.Op.or] = searchConditions;
+      }
+
       if (fromDate && toDate) {
         const startDate = new Date(fromDate);
         const endDate = new Date(toDate);

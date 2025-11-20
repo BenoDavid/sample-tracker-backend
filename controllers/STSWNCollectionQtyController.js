@@ -1,7 +1,7 @@
 // src/controllers/STSWNCollectionQtyController.js
 const db = require('../models');
 const BaseController = require('./BaseController');
-const { STSWNCollectionQty } = db.sequelizeDb2.models; // adjust if using a different sequelize instance
+const { STSWNCollection, STSWNCollectionQty } = db.sequelizeDb2.models; // adjust if using a different sequelize instance
 
 class STSWNCollectionQtyController extends BaseController {
   constructor() {
@@ -44,7 +44,44 @@ class STSWNCollectionQtyController extends BaseController {
       });
     }
   }
+async getOneByCustomKey(req, res) {
+    try {
+      // Extract query parameters for pagination, filtering, and sorting
+      const { ...filters } = req.body;
 
+      // Set up filtering
+      const filterOptions = {};
+
+
+      for (const key in filters) {
+        filterOptions[key] = filters[key];
+      }
+
+      // Combine all options and fetch data
+      const item = await this.model.findOne({
+        where: filterOptions,include:[
+            {
+              model: STSWNCollection,
+              as: "collection",
+              required: false,
+            },
+          ]
+      });
+
+      // Respond with paginated data and metadata
+      res.status(200).json({
+        status: 200,
+        message: `${this.model.name} fetched successfully`,
+        result: item
+      });
+    } catch (error) {
+      res.status(500).json({
+        status: 500,
+        message: error.message,
+        result: {},
+      });
+    }
+  }
 }
 
 module.exports = new STSWNCollectionQtyController();

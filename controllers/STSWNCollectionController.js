@@ -146,6 +146,8 @@ class STSWNCollectionController extends BaseController {
         limit = 10,
         sortBy = 'createdAt',
         sortOrder = 'DESC',
+        search,
+        searchField,
         stage = null,
         inOrOut = null,
         ...filters
@@ -157,6 +159,25 @@ class STSWNCollectionController extends BaseController {
       const filterOptions = {};
       for (const key in filters) {
         filterOptions[key] = filters[key];
+      }
+      // 🔍 Dynamic field search
+      if (search && searchField) {
+        filterOptions[searchField] = {
+          [Sequelize.Op.like]: `%${search}%`
+        };
+      }
+
+      // 🔍 Global search across all model fields
+      else if (search) {
+        const searchConditions = [];
+
+        for (const attribute of Object.keys(this.model.rawAttributes)) {
+          searchConditions.push({
+            [attribute]: { [Sequelize.Op.like]: `%${search}%` }
+          });
+        }
+
+        filterOptions[Sequelize.Op.or] = searchConditions;
       }
 
       if (fromDate && toDate) {
