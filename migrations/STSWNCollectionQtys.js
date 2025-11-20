@@ -38,7 +38,9 @@ module.exports = {
             cftOutTime: { type: Sequelize.DATE, allowNull: true },
             cftStatus: { type: Sequelize.STRING, allowNull: true },
             cftOutBy: { type: Sequelize.STRING, allowNull: true },
-            cftNote: { type: Sequelize.TEXT, allowNull: true }
+            cftNote: { type: Sequelize.TEXT, allowNull: true },
+            data: { type: Sequelize.TEXT },
+
         });
     },
 

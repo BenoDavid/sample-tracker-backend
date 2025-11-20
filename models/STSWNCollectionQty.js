@@ -35,7 +35,20 @@ module.exports = (sequelize, DataTypes) => {
         cftOutTime: { type: DataTypes.DATE },
         cftStatus: { type: DataTypes.STRING },
         cftOutBy: { type: DataTypes.STRING },
-        cftNote: { type: DataTypes.TEXT }
+        cftNote: { type: DataTypes.TEXT },
+        data: {
+            type: DataTypes.TEXT,
+            allowNull: false,
+            defaultValue: '{}',
+            get() {
+                const value = this.getDataValue('data');
+                return value ? JSON.parse(value) : {};
+            },
+            set(value) {
+                this.setDataValue('data', JSON.stringify(value));
+            }
+        },
+
 
     }, {
         sequelize,
