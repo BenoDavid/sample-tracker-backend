@@ -202,6 +202,16 @@ class STSWNCollectionController extends BaseController {
             required: false,
           },
         ];
+      } else if (stage == 'indent-admin') {
+        inc = stage
+          ? [
+            {
+              model: STSWNCollectionStage,
+              as: "stages",
+              required: false,
+            },
+          ]
+          : [];
       } else {
         inc = stage
           ? [

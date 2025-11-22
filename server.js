@@ -29,7 +29,6 @@ app.use(cors({
 }));
 
 
-
 // ------------------ Routes ------------------
 app.use('/api/st', routes); // Main API routes with watchMan middleware
 

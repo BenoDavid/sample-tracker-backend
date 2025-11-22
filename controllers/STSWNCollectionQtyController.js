@@ -48,25 +48,31 @@ class STSWNCollectionQtyController extends BaseController {
   async getOneByCustomKey(req, res) {
     try {
       // Extract query parameters for pagination, filtering, and sorting
-      const { ...filters } = req.body;
+      const { stage = null,
+        ...filters } = req.body;
 
       // Set up filtering
       const filterOptions = {};
 
 
       for (const key in filters) {
-        filterOptions[key] = filters[key];
+        if (filterOptions[key] != 'stage') {
+          filterOptions[key] = filters[key];
+        }
       }
 
+      let inc;
+
+      inc = [
+        {
+          model: STSWNCollection,
+          as: "collection",
+          required: false,
+        },
+      ];
       // Combine all options and fetch data
       const item = await this.model.findOne({
-        where: filterOptions, include: [
-          {
-            model: STSWNCollection,
-            as: "collection",
-            required: false,
-          },
-        ]
+        where: filterOptions, include: inc
       });
 
       // Respond with paginated data and metadata
@@ -134,7 +140,7 @@ class STSWNCollectionQtyController extends BaseController {
         };
       }
 
-      
+
       // Combine all options and fetch data
       const items = await this.model.findAndCountAll({
         where: filterOptions,
@@ -142,7 +148,7 @@ class STSWNCollectionQtyController extends BaseController {
           {
             model: STSWNCollection,
             as: "collection",
-            attributes:['season','sampleType','style','color','size','buyer'],
+            attributes: ['season', 'sampleType', 'style', 'color', 'size', 'buyer'],
             required: false,
           },
         ]
