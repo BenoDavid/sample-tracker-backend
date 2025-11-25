@@ -17,8 +17,8 @@ module.exports = (sequelize, DataTypes) => {
         line: { type: DataTypes.STRING },
         operator: { type: DataTypes.STRING },
         operatorAssignedBy: { type: DataTypes.STRING },
-        lineInTime: { type: DataTypes.DATE },
-        lineOutTime: { type: DataTypes.DATE },
+        lineInTime: { type: DataTypes.DATETIME },
+        lineOutTime: { type: DataTypes.DATETIME },
         lostMinutes: { type: DataTypes.INTEGER },
         lostMinRemark: { type: DataTypes.TEXT },
 
@@ -32,7 +32,7 @@ module.exports = (sequelize, DataTypes) => {
         qcNote: { type: DataTypes.TEXT },
 
         // CFT process
-        cftOutTime: { type: DataTypes.DATE },
+        cftOutTime: { type: DataTypes.DATETIME },
         cftStatus: { type: DataTypes.STRING },
         cftOutBy: { type: DataTypes.STRING },
         cftNote: { type: DataTypes.TEXT },

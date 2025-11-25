@@ -20,13 +20,13 @@ module.exports = {
             line: { type: Sequelize.STRING, allowNull: true },
             operator: { type: Sequelize.STRING, allowNull: true },
             operatorAssignedBy: { type: Sequelize.STRING, allowNull: true },
-            lineInTime: { type: Sequelize.DATE, allowNull: true },
-            lineOutTime: { type: Sequelize.DATE, allowNull: true },
+            lineInTime: { type: Sequelize.DATETIME, allowNull: true },
+            lineOutTime: { type: Sequelize.DATETIME, allowNull: true },
             lostMinutes: { type: Sequelize.INTEGER },
             lostMinRemark: { type: Sequelize.TEXT, allowNull: true },
 
             // Stitch process
-            stitchOutTime: { type: Sequelize.DATE, allowNull: true },
+            stitchOutTime: { type: Sequelize.DATETIME, allowNull: true },
             stitchOutBy: { type: Sequelize.STRING, allowNull: true },
 
             // QC process
@@ -35,7 +35,7 @@ module.exports = {
             qcNote: { type: Sequelize.TEXT, allowNull: true },
 
             // CFT process
-            cftOutTime: { type: Sequelize.DATE, allowNull: true },
+            cftOutTime: { type: Sequelize.DATETIME, allowNull: true },
             cftStatus: { type: Sequelize.STRING, allowNull: true },
             cftOutBy: { type: Sequelize.STRING, allowNull: true },
             cftNote: { type: Sequelize.TEXT, allowNull: true },

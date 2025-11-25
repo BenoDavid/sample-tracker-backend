@@ -19,11 +19,11 @@ module.exports = {
                 allowNull: false
             },
             inAt: {
-                type: Sequelize.DATE,
+                type: Sequelize.DATETIME,
                 allowNull: true
             },
             outAt: {
-                type: Sequelize.DATE,
+                type: Sequelize.DATETIME,
                 allowNull: true
             },
             inBy: {

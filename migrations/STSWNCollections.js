@@ -26,11 +26,9 @@ module.exports = {
             style: {
                 type: Sequelize.STRING
             },
-
             supplier: {
                 type: Sequelize.STRING
             },
-
             color: {
                 type: Sequelize.STRING
             },
@@ -63,7 +61,7 @@ module.exports = {
             cutting: { type: Sequelize.INTEGER },
             createdAt: {
                 allowNull: false,
-                type: Sequelize.DATE,
+                type: Sequelize.DATETIME,
             }
         });
     },
