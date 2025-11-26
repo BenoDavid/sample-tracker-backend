@@ -33,7 +33,9 @@ module.exports = (sequelize, DataTypes) => {
     stitching: { type: DataTypes.INTEGER },
     trim: { type: DataTypes.INTEGER },
     cutting: { type: DataTypes.INTEGER },
-    createdAt: { type: DataTypes.DATETIME, defaultValue: DataTypes.NOW }
+    fabricType: { type: DataTypes.STRING },
+    stitchingSMV: { type: DataTypes.DOUBLE },
+    createdAt: { type: DataTypes.DATE, defaultValue: DataTypes.NOW }
   }, {
     sequelize,
     modelName: 'STSWNCollection',

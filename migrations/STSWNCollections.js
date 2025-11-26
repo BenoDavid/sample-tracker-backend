@@ -59,9 +59,11 @@ module.exports = {
             stitching: { type: Sequelize.INTEGER },
             trim: { type: Sequelize.INTEGER },
             cutting: { type: Sequelize.INTEGER },
+            fabricType: { type: Sequelize.STRING },
+            stitchingSMV: { type: Sequelize.DOUBLE },
             createdAt: {
                 allowNull: false,
-                type: Sequelize.DATETIME,
+                type: Sequelize.DATE,
             }
         });
     },
