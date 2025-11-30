@@ -89,6 +89,45 @@ class STSWNCollectionQtyController extends BaseController {
       });
     }
   }
+  async getAllByCustomKey(req, res) {
+    try {
+      // Extract query parameters for pagination, filtering, and sorting
+      const { ...filters } = req.body;
+
+      // Set up filtering
+      const filterOptions = {};
+
+
+      for (const key in filters) {
+        filterOptions[key] = filters[key];
+      }
+
+      // Combine all options and fetch data
+      const items = await this.model.findAll({
+        where: filterOptions,
+        include: [
+          {
+            model: STSWNCollection,
+            as: "collection",
+            required: false,
+          },
+        ]
+      });
+
+      // Respond with paginated data and metadata
+      res.status(200).json({
+        status: 200,
+        message: `${this.model.name} fetched successfully`,
+        result: items
+      });
+    } catch (error) {
+      res.status(500).json({
+        status: 500,
+        message: error.message,
+        result: [],
+      });
+    }
+  }
   async getAll(req, res) {
     try {
       // Extract query parameters for pagination, filtering, and sorting

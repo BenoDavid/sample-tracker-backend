@@ -17,6 +17,7 @@ class BaseRouter {
     this.router.post('/createBatch', this.controller.createBatch.bind(this.controller));
 
     this.router.post('/customGet', this.controller.getOneByCustomKey.bind(this.controller));
+    this.router.post('/customGetAll', this.controller.getAllByCustomKey.bind(this.controller));
 
     this.router.put('/:id', this.controller.update.bind(this.controller));
     this.router.post('/updateBatch', this.controller.updateBatch.bind(this.controller));
