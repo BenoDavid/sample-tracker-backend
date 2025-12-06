@@ -5,6 +5,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       STSWNCollection.hasMany(models.STSWNCollectionStage, { foreignKey: 'collectionId', sourceKey: 'id', as: 'stages' });
       STSWNCollection.hasMany(models.STSWNCollectionQty, { foreignKey: 'collectionId', sourceKey: 'id', as: 'pieces' });
+      STSWNCollection.hasMany(models.STSWNCutting, { foreignKey: 'collectionId', sourceKey: 'id', as: 'cuttings' });
 
     }
   }

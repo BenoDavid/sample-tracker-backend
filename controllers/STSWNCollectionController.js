@@ -1,7 +1,7 @@
 // src/controllers/STSWNCollectionController.js
 const db = require('../models');
 const BaseController = require('./BaseController');
-const { STSWNCollectionQty, STSWNCollectionStage, STSWNCollection } = db.sequelizeDb2.models; // adjust if using a different sequelize instance
+const { STSWNCollectionQty, STSWNCollectionStage, STSWNCollection, STSWNCutting } = db.sequelizeDb2.models; // adjust if using a different sequelize instance
 
 class STSWNCollectionController extends BaseController {
   constructor() {
@@ -210,6 +210,11 @@ class STSWNCollectionController extends BaseController {
               as: "stages",
               required: false,
             },
+            {
+              model: STSWNCutting,
+              as: "cuttings",
+              required: false,
+            }
           ]
           : [];
       } else {
@@ -246,7 +251,7 @@ class STSWNCollectionController extends BaseController {
 
       if (inOrOut === "in") {
         // Want collections that have *no stages*
-        finalRows = finalRows.filter(item => item?.stages?.length === 0);
+        finalRows = finalRows.filter(item => Number(item[stage]) < Number(item?.swnQty));
       }
       if (inOrOut === "out") {
         // Want collections that have *stages*

@@ -2,30 +2,28 @@
 const { Model } = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
-    class STSWNCollectionStage extends Model {
+    class STSWNCutting extends Model {
         static associate(models) {
+            STSWNCutting.hasOne(models.STSWNCollection, { foreignKey: 'id', sourceKey: 'collectionId', as: 'collection' });
 
         }
     }
 
-    STSWNCollectionStage.init({
+    STSWNCutting.init({
         id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
         collectionId: { type: DataTypes.INTEGER, allowNull: false },
-        stageType: { type: DataTypes.STRING },
         inAt: { type: DataTypes.DATE },
         outAt: { type: DataTypes.DATE },
-        inBy: { type: DataTypes.STRING },
         outBy: { type: DataTypes.STRING },
         status: { type: DataTypes.STRING },
         qty: { type: DataTypes.INTEGER },
         note: { type: DataTypes.TEXT },
-        attachment: { type: DataTypes.STRING },
     }, {
         sequelize,
-        modelName: 'STSWNCollectionStage',
-        tableName: 'STSWNCollectionStages',
+        modelName: 'STSWNCutting',
+        tableName: 'STSWNCuttings',
         timestamps: false
     });
 
-    return STSWNCollectionStage;
+    return STSWNCutting;
 };

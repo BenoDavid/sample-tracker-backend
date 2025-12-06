@@ -13,32 +13,27 @@ module.exports = {
             qtyId: {
                 type: Sequelize.INTEGER,
                 allowNull: false,
-                references: {
-                    model: 'STSWNCollectionQtys',
-                    key: 'id'
-                },
-                onUpdate: 'CASCADE',
-                onDelete: 'CASCADE'
+
             },
             defectType: {
                 type: Sequelize.STRING,
                 allowNull: false // e.g., 'Stitching QC', 'CFT QC'
             },
-            description: {
-                type: Sequelize.TEXT,
-                allowNull: true
+            count: {
+                type: Sequelize.INTEGER,
+                allowNull: false
             },
-            severity: {
+            section: {
                 type: Sequelize.STRING,
-                allowNull: true // 'Minor', 'Major', 'Critical'
+                allowNull: false
             },
             detectedBy: {
                 type: Sequelize.STRING,
-                allowNull: true
+                allowNull: false
             },
             detectedAt: {
                 type: Sequelize.DATE,
-                allowNull: true
+                allowNull: false
             }
         });
     },

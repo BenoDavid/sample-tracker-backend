@@ -1,43 +1,47 @@
-// src/controllers/STSWNCollectionQtyController.js
-const { Sequelize } = require('sequelize');
+// src/controllers/STSWNCuttingController.js
 const db = require('../models');
 const BaseController = require('./BaseController');
-const { STSWNCollection, STSWNCollectionQty } = db.sequelizeDb2.models; // adjust if using a different sequelize instance
+const { STSWNCutting, STSWNCollection } = db.sequelizeDb2.models;
 
-class STSWNCollectionQtyController extends BaseController {
+class STSWNCuttingController extends BaseController {
   constructor() {
-    super(STSWNCollectionQty);
+    super(STSWNCutting);
   }
-  async updateBulkDataEach(req, res) {
+  async updateBatch(req, res) {
+    const sequelize = STSWNCutting.sequelize; // ensure same instance
+    const t = await sequelize.transaction();
+
     try {
-      const updates = req.body; // array of objects
+      const reqParams = req.body;
 
-      if (!Array.isArray(updates) || updates.length === 0) {
-        return res.status(400).json({
-          status: 400,
-          message: "Request body must be an array",
-          result: null,
-        });
+      if (Array.isArray(reqParams?.cuttings) && reqParams.cuttings.length > 0) {
+        for (const item of reqParams.cuttings) {
+          const { id, ...data } = item;
+          if (!id) continue;
+
+          await STSWNCutting.update(
+            data,
+            {
+              where: { id },
+              transaction: t
+            }
+          );
+        }
       }
 
-      const results = [];
-
-      for (const item of updates) {
-        const { id, ...data } = item;
-
-        if (!id) continue;
-
-        const [updated] = await this.model.update(data, { where: { id } });
-
-        results.push({ id, updated });
-      }
+      // Commit transaction
+      await t.commit();
 
       res.status(200).json({
         status: 200,
-        message: `${this.model.name}s updated successfully`,
-        result: results,
+        message: `Bulk update successful`,
+        result: [],
       });
+
     } catch (error) {
+      // Rollback transaction
+      await t.rollback();
+
       res.status(500).json({
         status: 500,
         message: error.message,
@@ -45,86 +49,56 @@ class STSWNCollectionQtyController extends BaseController {
       });
     }
   }
-  async getOneByCustomKey(req, res) {
+  async updateBulkDataEach(req, res) {
+    const sequelize = STSWNCutting.sequelize; // ensure same instance
+    const t = await sequelize.transaction();
+
     try {
-      // Extract query parameters for pagination, filtering, and sorting
-      const { stage = null,
-        ...filters } = req.body;
-
-      // Set up filtering
-      const filterOptions = {};
+      const reqParams = req.body;
 
 
-      for (const key in filters) {
-        if (filterOptions[key] != 'stage') {
-          filterOptions[key] = filters[key];
+      // -------------------------
+      // 1) CREATE STAGES
+      // -------------------------
+      if (Array.isArray(reqParams?.cuttings) && reqParams.cuttings.length > 0) {
+        await STSWNCutting.bulkCreate(reqParams.cuttings, { transaction: t });
+      }
+
+      // -------------------------
+      // 2) UPDATE COLLECTIONS
+      // -------------------------
+      if (Array.isArray(reqParams?.collections) && reqParams.collections.length > 0) {
+        for (const item of reqParams.collections) {
+          const { id, ...data } = item;
+          if (!id) continue;
+
+          await STSWNCollection.update(
+            data,
+            {
+              where: { id },
+              transaction: t
+            }
+          );
         }
       }
 
-      let inc;
+      // Commit transaction
+      await t.commit();
 
-      inc = [
-        {
-          model: STSWNCollection,
-          as: "collection",
-          required: false,
-        },
-      ];
-      // Combine all options and fetch data
-      const item = await this.model.findOne({
-        where: filterOptions, include: inc
-      });
-
-      // Respond with paginated data and metadata
       res.status(200).json({
         status: 200,
-        message: `${this.model.name} fetched successfully-`,
-        result: item
-      });
-    } catch (error) {
-      res.status(500).json({
-        status: 500,
-        message: error.message,
-        result: {},
-      });
-    }
-  }
-  async getAllByCustomKey(req, res) {
-    try {
-      // Extract query parameters for pagination, filtering, and sorting
-      const { ...filters } = req.body;
-
-      // Set up filtering
-      const filterOptions = {};
-
-
-      for (const key in filters) {
-        filterOptions[key] = filters[key];
-      }
-
-      // Combine all options and fetch data
-      const items = await this.model.findAll({
-        where: filterOptions,
-        include: [
-          {
-            model: STSWNCollection,
-            as: "collection",
-            required: false,
-          },
-        ]
-      });
-
-      // Respond with paginated data and metadata
-      res.status(200).json({
-        status: 200,
-        message: `${this.model.name} fetched successfully`,
-        result: items
-      });
-    } catch (error) {
-      res.status(500).json({
-        status: 500,
-        message: error.message,
+        message: `Bulk update successful`,
         result: [],
+      });
+
+    } catch (error) {
+      // Rollback transaction
+      await t.rollback();
+
+      res.status(500).json({
+        status: 500,
+        message: error.message,
+        result: null,
       });
     }
   }
@@ -178,19 +152,21 @@ class STSWNCollectionQtyController extends BaseController {
           [Sequelize.Op.between]: [startDate, endDate],
         };
       }
-
-
+      filterOptions.outBy = null;
       // Combine all options and fetch data
       const items = await this.model.findAndCountAll({
         where: filterOptions,
+
         include: [
           {
             model: STSWNCollection,
             as: "collection",
-            attributes: ['season', 'sampleType', 'style', 'color', 'size', 'buyer'],
             required: false,
+            attributes: { exclude: ["id"] },
           },
         ]
+        // order: sortOptions,
+        // ...paginationOptions
       });
 
       // Respond with paginated data and metadata
@@ -215,4 +191,4 @@ class STSWNCollectionQtyController extends BaseController {
   }
 }
 
-module.exports = new STSWNCollectionQtyController();
+module.exports = new STSWNCuttingController();
